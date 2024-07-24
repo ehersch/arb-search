@@ -30,6 +30,10 @@ def main():
     else:
 
         action = input("Find arbitrage based off past bets? (y/n)\n")
+        # TODO: We should change this code so that it does the following: retrieve
+        # all past bets on games whose odds are currently listed. See if for some
+        # bet we placed in the past we can bet on the opponent now and find
+        # ourselves in arbitrage.
         if action == "y":
             team_1 = input("Input team 1 (caps with city -- ex: Los Angeles Angels).\n")
             team_2 = input("Input team 2 (caps with city -- ex: Los Angeles Angels).\n")

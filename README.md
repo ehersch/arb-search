@@ -21,7 +21,7 @@ user to enter their previous bets into a database, and find_bets.py is used to p
 certain game. Then, find_arb parses through the odds posted on each matchup to find if there is an
 arbitrage opporutnity available.
 
-Finally,src/main.py is what the user interacts with. Through the command line they indicate here which service
+Finally, src/main.py is what the user interacts with. Through the command line they indicate here which service
 they want to take advantage of. They can search for a current arbitrage opportunities (either bases off of
 live odds on both sides ot odds on one team versus odds from a bet they already places). They can enter their
 previous bets. Finally, they can take advantage of the odds forecaster and use this to predict if there

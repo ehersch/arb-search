@@ -37,11 +37,7 @@ def main():
 
 
 def individual_arb(data):
-    [(team_a, team_b)] = data.keys()
-
     min_a = min_b = 1
-    oa = ob = 0
-
     [lst] = data.values()
     site_a = site_b = ""
 
@@ -52,7 +48,8 @@ def individual_arb(data):
             odd_a = (-a) / ((-a) + 100)
         temp = min_a
 
-        if odd_a < min_a:
+        # TODO: ensure not pulling from same 2 sites. We should verify this.
+        if odd_a < min_a and site != site_b:
             min_a = odd_a
             val_a = a
             site_a = site
@@ -66,13 +63,15 @@ def individual_arb(data):
             odd_b = (-b) / ((-b) + 100)
         temp = min_b
 
-        if odd_b < min_b:
+        # TODO: ensure not pulling from same 2 sites. We should verify this.
+        if odd_b < min_b and site != site_a:
             min_b = odd_b
             val_b = b
             site_b = site
 
         if temp != min_b:
             site_b = site
+
     return ((min_a, site_a), (min_b, site_b), (val_a, val_b))
 
 
