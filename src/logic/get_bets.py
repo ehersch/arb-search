@@ -27,6 +27,9 @@ def main(t1, t2, time):
         "api-key": "***",
     }
 
+    a_sites = set()
+    b_sites = set()
+
     response = requests.request("POST", url, headers=headers, data=filt)
     data = response.json()
     print(data["document"]["odds_a"])
@@ -39,12 +42,18 @@ def main(t1, t2, time):
         odds_b = float(instance["data"]["odds_b"])
         amt_a = float(instance["data"]["amt_a"])
         amt_b = float(instance["data"]["amt_b"])
+        if amt_b == 0:
+            a_sites.append(instance["data"]["site"])
+        if amt_a == 0:
+            b_sites.append(instance["data"]["site"])
         t1_odds += odds_a * amt_a
         t2_odds += odds_b * amt_b
         t1_total += amt_a
         t2_total += amt_b
 
     return (
+        a_sites,
+        b_sites,
         t1,
         t2,
         float(t1_odds / float(t1_total)),

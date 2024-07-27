@@ -22,11 +22,13 @@ def main():
                 f"There is arbitrage available.\n{res['site_a']}: {res['t1']} for {res['val_a']}\n{res['site_b']}: {res['t2']} for {res['val_b']} playing at {res['time']}."
             )
             amt = input("Enter your desired bet quantity.\n")
-            (team_a, x, a), (team_b, y, b) = split(int(amt), res)
+            profit, (team_a, x, a), (team_b, y, b) = split(int(amt), res)
+            print(f"Bet {x} on {team_a} and {y} on {team_b} to profit {profit}")
 
             enter = input("Press 'return' to enter this bet.\n")
             if enter == "":
-                enter_bets.main(team_a, team_b, a, b, x, y)
+                enter_bets.main(res["site_a"], team_a, team_b, a, b, x, 0)
+                enter_bets.main(res["site_b"], team_a, team_b, a, b, 0, y)
     else:
 
         action = input("Find arbitrage based off past bets? (y/n)\n")
@@ -55,8 +57,8 @@ def main():
                         current_odds_a, current_odds_b = odds
                         # Compare current odds with past odds to find arbitrage
                         arb_opportunity = check_arbitrage(
-                            team_1,
-                            team_2,
+                            team1,
+                            team2,
                             past_odds_a,
                             amt_a,
                             past_odds_b,
@@ -74,7 +76,7 @@ def main():
                 print("No arbitrage opportunities based on past bets.")
 
 
-def check_arbitrage(past_bet, current_odds, site_a, site_b, time, t1, t2):
+def check_arbitrage(past_bet, current_odds, site_a, site_b, time):
     """
     Check if there is an arbitrage opportunity based on past and current odds.
 
@@ -88,7 +90,7 @@ def check_arbitrage(past_bet, current_odds, site_a, site_b, time, t1, t2):
         dict or None: Returns a dictionary with arbitrage opportunity details if found,
                       otherwise returns None.
     """
-    team_a, team_b, past_odds_a, amt_a, past_odds_b, amt_b = past_bet
+    t1, t2, past_odds_a, amt_a, past_odds_b, amt_b = past_bet
 
     # Calculate implied probabilities for past odds
     if past_odds_a > 0:
@@ -112,21 +114,37 @@ def check_arbitrage(past_bet, current_odds, site_a, site_b, time, t1, t2):
     else:
         current_odd_b = (-current_odds[1]) / ((-current_odds[1]) + 100)
 
-    # Check for arbitrage opportunity
-    if (odd_a + current_odd_b < 1) or (current_odd_a + odd_b < 1):
-        arbitrage_opportunity = {
-            "site_a": site_a,
-            "site_b": site_b,
-            "time": time,
+    if odd_a + current_odd_b < 1:
+        res = {
+            "val_a": past_odds_a,
+            "val_b": current_odds[1],
+            "a": odd_a,
+            "b": current_odd_b,
             "t1": t1,
             "t2": t2,
-            "a": current_odds[0],
-            "b": current_odds[1],
-            "val_a": ___,
-            "val_b": ___,
-            # TODO figure out amounts for each
         }
-        return arbitrage_opportunity
+        profit, (team_a, x, a), (team_b, y, b) = split(100, res)
+        scale = amt_a / x
+        amt_b = scale * y
+        profit *= scale
+        return profit, t2, amt_b
+
+    if odd_b + current_odd_a < 1:
+        res = [(current_odd_a, site_a), (odd_b, site_b), (current_odds[0], past_odds_b)]
+        res = {
+            "val_a": current_odds[0],
+            "val_b": past_odds_b,
+            "a": current_odd_a,
+            "b": odd_b,
+            "t1": t1,
+            "t2": t2,
+        }
+        profit, (team_a, x, a), (team_b, y, b) = split(100, res)
+        scale = amt_b / y
+        amt_a = scale * x
+        profit *= scale
+
+        return profit, t1, amt_a
 
     return None
 
@@ -164,8 +182,7 @@ def split(amt, res):
     num = amt - 100 * (amt / b)
     x = num / denom
     profit = x * a / 100 - amt + x
-    print(f"Bet {x} on {team_a} and {amt-x} on {team_b} to profit {profit}")
-    return (team_a, x, a), (team_b, amt - x, b)
+    return profit, (team_a, x, a), (team_b, amt - x, b)
 
 
 if __name__ == "__main__":
