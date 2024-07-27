@@ -1,3 +1,23 @@
+"""
+Script to identify baseball arbitrage opportunities based on odds data.
+
+This script parses data containing baseball odds from various betting sites
+and checks for arbitrage opportunities. An arbitrage opportunity exists if
+the sum of the inverse odds for the two teams in a match is less than 1,
+indicating a guaranteed profit regardless of the outcome.
+
+Functions:
+    main(): Main function that iterates through matchups and identifies arbitrage opportunities.
+    individual_arb(data): Analyzes the odds for a single matchup to find the best odds for each team.
+
+Modules:
+    sys, os: Used for adjusting the system path.
+    parse_json: Custom module to parse odds data from JSON.
+
+Example usage:
+    Run this script to print any identified arbitrage opportunities.
+"""
+
 import sys
 import os
 
@@ -8,10 +28,18 @@ from cols import parse_json
 data = parse_json.main()
 
 
-# Given the odds generated from API call, find if there are any current baseball
-# arbitrage opportunities.
-# Parse through every matchup and pass each into individual_arb.
 def main():
+    """
+    Main function to parse baseball odds data and find arbitrage opportunities.
+
+    This function retrieves the odds data, iterates over each matchup, and
+    passes the data to the individual_arb function to check for arbitrage
+    opportunities. If an opportunity is found, it is printed and returned.
+
+    Returns:
+        dict: A dictionary containing details of the arbitrage opportunity
+              if found, otherwise None.
+    """
     data = parse_json.main()
     print(len(data))
     for (t1, t2, time), lst in data.items():
@@ -37,6 +65,18 @@ def main():
 
 
 def individual_arb(data):
+    """
+    Determine the best odds for each team in a given matchup to find arbitrage opportunities.
+
+    Args:
+        data (dict): A dictionary containing matchup data with team names as keys
+                     and a list of (site, odds) tuples as values.
+
+    Returns:
+        tuple: A tuple containing:
+               - ((float, str), (float, str)): Best odds and corresponding site for team 1 and team 2.
+               - (float, float): Original odds for team 1 and team 2.
+    """
     min_a = min_b = 1
     [lst] = data.values()
     site_a = site_b = ""

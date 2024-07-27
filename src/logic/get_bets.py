@@ -44,7 +44,14 @@ def main(t1, t2, time):
         t1_total += amt_a
         t2_total += amt_b
 
-    return (float(t1_odds / float(t1_total)), float(t2_odds / float(t2_total)))
+    return (
+        t1,
+        t2,
+        float(t1_odds / float(t1_total)),
+        t1_total,
+        float(t2_odds / float(t2_total)),
+        t2_total,
+    )
 
 
 if __name__ == "__main__":
