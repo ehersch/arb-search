@@ -16,13 +16,45 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class WebDriverManager:
+    """
+    A class to manage different web drivers (Chrome, Firefox, Edge, Safari) for web scraping or automated browsing tasks.
+
+    Attributes:
+        driver_path (str): Path to the web driver executable.
+        driver_type (str): Type of the web driver (default is "chrome").
+        headless (bool): Whether to run the browser in headless mode (default is False).
+        driver: The web driver instance.
+
+    Methods:
+        _initialize_driver(): Initializes and returns the web driver based on the specified type and options.
+        open_page(url: str, wait_for_class_names: str = None, timeout: int = 10): Opens the specified URL and waits for the specified element class names if provided.
+        close(): Closes the web driver.
+    """
+    
     def __init__(self, driver_path: str, driver_type: str = "chrome", headless: bool = False):
+        """
+        Initializes the WebDriverManager with the specified driver path, driver type, and headless option.
+
+        Args:
+            driver_path (str): Path to the web driver executable.
+            driver_type (str): Type of the web driver (default is "chrome").
+            headless (bool): Whether to run the browser in headless mode (default is False).
+        """
         self.driver_path = driver_path
         self.driver_type = driver_type.lower()
         self.headless = headless
         self.driver = self._initialize_driver()
     
     def _initialize_driver(self):
+        """
+        Initializes and returns the web driver based on the specified type and options.
+
+        Returns:
+            WebDriver: The initialized web driver instance.
+
+        Raises:
+            ValueError: If the specified driver type is unsupported.
+        """
         if self.driver_type == "chrome":
             options = ChromeOptions()
             if self.headless:
@@ -51,6 +83,17 @@ class WebDriverManager:
             raise ValueError("Unsupported driver type: {}".format(self.driver_type))
 
     def open_page(self, url: str, wait_for_class_names: str = None, timeout: int = 11):
+        """
+        Opens the specified URL and waits for the specified element class names if provided.
+
+        Args:
+            url (str): The URL of the page to open.
+            wait_for_class_names (str, optional): Space-separated class names of the element to wait for (default is None).
+            timeout (int, optional): The maximum time to wait for the element in seconds (default is 10).
+
+        Returns:
+            str: The page source of the opened URL.
+        """
         self.driver.get(url)
 
         if wait_for_class_names:
@@ -65,9 +108,10 @@ class WebDriverManager:
         return self.driver.page_source
 
     def close(self):
+        """
+        Closes the web driver.
+        """
         self.driver.quit()
-
-
 
 
 
