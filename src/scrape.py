@@ -120,7 +120,7 @@ def main():
     to every table that is loaded on the website. Invoking this script is done as follows:
 
     python3 scrape.py --driver_path <path_to_driver> --url https://www.espn.com/mlb/schedule --headless \
-    --wait_class_name "ScheduleTables"
+    --wait_class_names "ScheduleTables"
 
     When this is executed, this script should print to the terminal all the links of games that are currently live
     or yet to be played.
