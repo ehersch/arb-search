@@ -30,8 +30,10 @@ class WebDriverManager:
         open_page(url: str, wait_for_class_names: str = None, timeout: int = 10): Opens the specified URL and waits for the specified element class names if provided.
         close(): Closes the web driver.
     """
-    
-    def __init__(self, driver_path: str, driver_type: str = "chrome", headless: bool = False):
+
+    def __init__(
+        self, driver_path: str, driver_type: str = "chrome", headless: bool = False
+    ):
         """
         Initializes the WebDriverManager with the specified driver path, driver type, and headless option.
 
@@ -44,7 +46,7 @@ class WebDriverManager:
         self.driver_type = driver_type.lower()
         self.headless = headless
         self.driver = self._initialize_driver()
-    
+
     def _initialize_driver(self):
         """
         Initializes and returns the web driver based on the specified type and options.
@@ -114,7 +116,6 @@ class WebDriverManager:
         self.driver.quit()
 
 
-
 def main():
     """The classname we primarily care about on the ESPN website is "ScheduleTables". This class is attached
     to every table that is loaded on the website. Invoking this script is done as follows:
@@ -125,18 +126,36 @@ def main():
     When this is executed, this script should print to the terminal all the links of games that are currently live
     or yet to be played.
     """
-    parser = argparse.ArgumentParser(description="A command line tool to open a web page using Selenium and BeautifulSoup.")
-    parser.add_argument("--driver_path", type=str, help="Path to the WebDriver executable.")
+    parser = argparse.ArgumentParser(
+        description="A command line tool to open a web page using Selenium and BeautifulSoup."
+    )
+    parser.add_argument(
+        "--driver_path", type=str, help="Path to the WebDriver executable."
+    )
     parser.add_argument("--url", type=str, help="URL of the web page to open.")
-    parser.add_argument("--driver_type", type=str, default="chrome", help="Type of WebDriver to use (chrome, firefox, edge, safari).")
-    parser.add_argument("--headless", action="store_true", help="Run browser in headless mode.")
-    parser.add_argument("--wait_class_names", type=str, default=None, help="Class name of the element to wait for.")
+    parser.add_argument(
+        "--driver_type",
+        type=str,
+        default="chrome",
+        help="Type of WebDriver to use (chrome, firefox, edge, safari).",
+    )
+    parser.add_argument(
+        "--headless", action="store_true", help="Run browser in headless mode."
+    )
+    parser.add_argument(
+        "--wait_class_names",
+        type=str,
+        default=None,
+        help="Class name of the element to wait for.",
+    )
 
     args = parser.parse_args()
 
     # Ensures the webpage is loaded by waiting for user specified class names to load
     manager = WebDriverManager(args.driver_path, args.driver_type, args.headless)
-    page_source = manager.open_page(args.url, wait_for_class_names=args.wait_class_names)
+    page_source = manager.open_page(
+        args.url, wait_for_class_names=args.wait_class_names
+    )
 
     # Parse the HTML content with BeautifulSoup
     soup = BeautifulSoup(page_source, "html.parser")
@@ -165,12 +184,13 @@ def main():
                 pass
 
     # Assumes we are using .com websites only. Should be refactored
-    com_index = args.url.find(".com") + 4 # len(".com") = 4
+    com_index = args.url.find(".com") + 4  # len(".com") = 4
     base_url = args.url[:com_index]
     for hl in hyperlinks:
         print(f"{base_url}{hl}")
 
     manager.close()
+
 
 if __name__ == "__main__":
     main()
