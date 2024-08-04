@@ -14,11 +14,11 @@ def create(path):
       CREATE TABLE IF NOT EXISTS game_forecasts (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-          home TEXT NOT NULL,
-          away TEXT NOT NULL,
+          team_a TEXT NOT NULL,
+          team_b TEXT NOT NULL,
           win_percentage REAL NOT NULL,
-          home_odds REAL NOT NULL,
-          away_odds REAL NOT NULL
+          team_a_odds REAL NOT NULL,
+          team_b_odds REAL NOT NULL
       )
   """
     )
@@ -28,16 +28,16 @@ def create(path):
     con.close()
 
 
-def insert(path, home, away, win_percentage, home_odds, away_odds):
+def insert(path, team_a, team_b, win_percentage, team_a_odds, team_b_odds):
     conn = sqlite3.connect(path)
     cursor = conn.cursor()
 
     cursor.execute(
         """
-        INSERT INTO game_forecasts (home, away, win_percentage, home_odds, away_odds)
+        INSERT INTO game_forecasts (team_a, team_b, win_percentage, team_a_odds, team_b_odds)
         VALUES (?, ?, ?, ?, ?)
     """,
-        (home, away, win_percentage, home_odds, away_odds),
+        (team_a, team_a, win_percentage, team_a_odds, team_b_odds),
     )
 
     conn.commit()

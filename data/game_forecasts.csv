@@ -1,2 +1,2 @@
-id,timestamp,home,away,win_percentage,home_odds,away_odds
-1,2024-08-04 22:31:01,Team A,Team B,0.65,1.5,1.2
+id,timestamp,team_a,team_b,win_percentage,team_a_odds,team_b_odds
+1,2024-08-04 22:38:13,Team A,Team A,0.65,1.5,1.2
