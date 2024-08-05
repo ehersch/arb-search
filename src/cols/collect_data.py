@@ -57,12 +57,10 @@ def main():
                 # Placeholder for actual win percentages
                 win_percentage1 = 0  # TODO: Get actual win percentage for team 1
                 win_percentage2 = 0  # TODO: Get actual win percentage for team 2
-
+                # Not necessary, should just be 1 - win_percentage1
+                # teams are ordered alphabetically
                 use_db.insert(
                     "data/baseball_forecasting.db", t1, t2, win_percentage1, a, b
-                )
-                use_db.insert(
-                    "data/baseball_forecasting.db", t2, t1, win_percentage2, b
                 )
 
         i += 1

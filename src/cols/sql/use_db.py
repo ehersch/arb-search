@@ -14,10 +14,11 @@ def create(path):
       CREATE TABLE IF NOT EXISTS game_forecasts (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-          team TEXT NOT NULL,
-          opponent TEXT NOT NULL,
+          team_a TEXT NOT NULL,
+          team_b TEXT NOT NULL,
           win_percentage REAL NOT NULL,
-          current_odds REAL NOT NULL
+          team_a_odds REAL NOT NULL,
+          team_b_odds REAL NOT NULL
       )
   """
     )
@@ -27,16 +28,16 @@ def create(path):
     con.close()
 
 
-def insert(path, team, opponent, win_percentage, current_odds):
+def insert(path, team_a, team_b, win_percentage, team_a_odds, team_b_odds):
     conn = sqlite3.connect(path)
     cursor = conn.cursor()
 
     cursor.execute(
         """
-        INSERT INTO game_forecasts (team, opponent, win_percentage, current_odds)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO game_forecasts (team_a, team_b, win_percentage, team_a_odds, team_b_odds)
+        VALUES (?, ?, ?, ?, ?)
     """,
-        (team, opponent, win_percentage, current_odds),
+        (team_a, team_a, win_percentage, team_a_odds, team_b_odds),
     )
 
     conn.commit()
@@ -101,5 +102,7 @@ def print_csv(csv_path):
 # Example usage
 db_path = "data/baseball_forecasting.db"
 csv_path = "data/game_forecasts.csv"
-# insert(db_path, "Team A", "Team B", 0.65, 1.5)
+# create(db_path)
+# insert(db_path, "Team A", "Team B", 0.65, 1.5, 1.2)
+# export_to_csv(db_path, csv_path)
 # get(db_path)
