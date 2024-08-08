@@ -41,3 +41,6 @@ Set the environment variables in your shell:
 export WEBDRIVER="/path/to/your/webdriver"
 export WEBDRIVER_TYPE="chrome"
 ```
+
+### Considerations
+If a game is live, the class we care about is `WinProbabilityHeader__Card` not `matchupPredictor`.

@@ -81,14 +81,14 @@ class WebDriverManager:
         else:
             raise ValueError("Unsupported driver type: {}".format(self.driver_type))
 
-    def open_page(self, url: str, wait_for_class_names: str = None, timeout: int = 11):
+    def open_page(self, url: str, wait_for_class_names: list[str] = None, timeout: int = 10):
         """
-        Opens the specified URL and waits for the specified element class names if provided.
+        Opens the specified URL and waits for one of the specified element class names if provided.
 
         Args:
             url (str): The URL of the page to open.
-            wait_for_class_names (str, optional): Space-separated class names of the element to wait for (default is None).
-            timeout (int, optional): The maximum time to wait for the element in seconds (default is 10).
+            wait_for_class_names (list[str], optional): List of class names of the elements to wait for (default is None).
+            timeout (int, optional): The maximum time to wait for the elements in seconds (default is 10).
 
         Returns:
             str: The page source of the opened URL.
@@ -96,11 +96,10 @@ class WebDriverManager:
         self.driver.get(url)
 
         if wait_for_class_names:
-            wait_for_class_names = ".".join(wait_for_class_names.split())
-
             WebDriverWait(self.driver, timeout).until(
-                EC.presence_of_element_located(
-                    (By.CSS_SELECTOR, f".{wait_for_class_names}")
+                EC.any_of(
+                    EC.presence_of_element_located((By.CLASS_NAME, class_name))
+                    for class_name in wait_for_class_names
                 )
             )
 
@@ -132,11 +131,12 @@ def load_page_source():
 
     # Ensures the webpage is loaded by waiting for user specified class names to load
     manager = WebDriverManager(driver_path, driver_type, args.headless)
-    page_source = manager.open_page(args.url, wait_for_class_names=args.wait_class_names)
+    wait_for_class_names = args.wait_class_names.split(",") if args.wait_class_names else None
+    page_source = manager.open_page(args.url, wait_for_class_names=wait_for_class_names)
     manager.close()
 
     return page_source, args
     
 
 if __name__ == "__main__":
-    main()
+    load_page_source()

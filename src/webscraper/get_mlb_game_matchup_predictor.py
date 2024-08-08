@@ -15,6 +15,11 @@ if __name__ == "__main__":
     matchup_prediction = target_nodes[0].text
     matchup_prediction = matchup_prediction.replace("%", " ").split(" ")
 
+    # Time is in the div with this class name
+    time_div_classname = "Gamestrip__Time--wrapper"
+    game_time_div = soup.select(f".{time_div_classname}")[0]
+    game_time = game_time_div.text    
+
     print("Matchup Below")
     print(f"{team_names[0]}: {matchup_prediction[0]}")
     print(f"{team_names[1]}: {matchup_prediction[1]}")
