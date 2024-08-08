@@ -1,28 +1,12 @@
 # arb-search
 
-Here you will find a few major files where code and such is located.
+Arbitrage betting is rare, but possible with the right tools and intuition. This is a fool-proof method of making money off of sports betting no matter what team wins. In this project, I scour various sports books to see if there are any current arbitrage opportunities. Then, a user can see if there are any arbitrage opportunities with respect to the bets they made in the past. Finally, I use time series forecasting to predict how a team's odds will change (go up or down), which may be useful in determining arbitrage betting opportunities.
 
-Right now, the data directory contains an MLB injury report CSV, and a JSON odds1.json.
+Here are the skills I refined:
+- Web scraping. I have only done web scraping once in the past, and for this project, I had to figure out a way to web-scrape baseball win probabilities off of ESPN. This task was daunting and frustrating at first, but I was able to accomplish this after researching common web scraping tactics, including Beautiful Soup 4.
 
-There are a few other files here but those are unimportant and will eventually be deleted.
+- Database design. I have worked with MongoDB before, but this was my first main project in SQL. I was always very comfortable with NoSQL databases, but once I realized information on odds was relational, I knew I needed to use a SQL database. I used the Python sqlite to collect data and organize it. I'm glad I was able to familiarize myself with SQL databases and also use a MongoDB database to hold other information.
 
-I plan on storing this data in Mongo in the future, as this is better when we collect a lot of data.
-For now, these files can be found here bacause they are being used for testing.
+- Forecasting techniques. Forecasting sounds scary and seems complicated. The math seems difficult, but once you find its derivations from standard regression tactics, it's not too bad. I learned about Arima and Prophet models, and most importantly, that data science requires experimenting with various models to see what truly sticks. On top of this, being organized with data, design, and visualizations can make it far easier to replicate such processes down the line, when training on new data sets.
 
-Inside src, there are 2 directories: cols and logic.
-
-Cols (or "collections") contains a script api.py to get a json of all of the sports odds from our odds API.
-The file injuries.py performs the webscraping to get baseball injury data in a CSV.
-Then parse_json.py takes the json fro api.py and essentially extracts the relevant data for our purposes
-and then stores this as a new json in data. test.json is what we use for testing
-
-Logic contains code for the various service offered by this program. For example, enter_bets.py allows a
-user to enter their previous bets into a database, and find_bets.py is used to pull previous bets on a
-certain game. Then, find_arb parses through the odds posted on each matchup to find if there is an
-arbitrage opporutnity available.
-
-Finally, src/main.py is what the user interacts with. Through the command line they indicate here which service
-they want to take advantage of. They can search for a current arbitrage opportunities (either bases off of
-live odds on both sides ot odds on one team versus odds from a bet they already places). They can enter their
-previous bets. Finally, they can take advantage of the odds forecaster and use this to predict if there
-will be a future arbitrage opportunity.
+Overall skills: data science (forecasting), sklearn, SQL.
