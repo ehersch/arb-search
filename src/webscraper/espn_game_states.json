@@ -1,0 +1,17 @@
+{
+    "mlb_game_conditions": [
+        {
+            "state": "live",
+            "wait_class_name": "WinProbabilityGraphHeader"
+        },
+        {
+            "state": "pending",
+            "wait_class_name": "matchupPredictor"
+        },
+        {
+            "state": "completed",
+            "wait_class_name": "WinProbabilityGraphHeader"
+        }
+    ],
+    "game_time_class_name": "ScoreCell__Time"
+}
