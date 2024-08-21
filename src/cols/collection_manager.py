@@ -23,11 +23,13 @@ import time
 import src.cols.read_api as read_api
 import parse_json
 from sql import use_db
+from webscraper import scrape_manager
+from datetime import datetime
 
 
-def main():
+def collect_day():
     """
-    Continuously fetches, parses, and stores baseball odds data in a database.
+    Continuously fetches, parses, and stores baseball odds data in a database for one day. Run once every day.
 
     This function runs an infinite loop that performs the following tasks every hour:
     1. Writes data to a JSON file using read_api.write_to.
@@ -44,6 +46,11 @@ def main():
     """
     i = 1
     while True:
+        now = datetime.now()
+
+        # End if it's 1:00 AM
+        if now.hour == 1:
+            return
         # Fetch and write odds data to a JSON file
         read_api.write_to(f"odds{i}.json")
 
@@ -55,16 +62,46 @@ def main():
             [lst] = data.values()
             for site, [a, b] in lst:
                 # Placeholder for actual win percentages
-                win_percentage1 = 0  # TODO: Get actual win percentage for team 1
-                win_percentage2 = 0  # TODO: Get actual win percentage for team 2
-                # Not necessary, should just be 1 - win_percentage1
-                # teams are ordered alphabetically
+                win_percentage = probability_dict[(t1, t2)]
+                # TODO: Get actual win percentage for team 1
+
+                # teams are ordered by (home, away)
                 use_db.insert(
-                    "data/baseball_forecasting.db", t1, t2, win_percentage1, a, b
+                    "data/baseball_forecasting.db", t1, t2, win_percentage, a, b
                 )
 
         i += 1
-        time.sleep(3600)  # Sleep for 1 hour (3600 seconds)
+
+        # Wait for 10 minutes before checking again during game time
+        # (between 1:00 pm and 5:30 pm or 6:30 pm to end).
+        # Otherwise, wait 30 minutes
+        now = datetime.now()
+
+        if (now.hour > 10 and now.hour < 13) or (
+            (now.hour > 5 and now.minute > 30) and (now.hour < 5 and now.minute < 30)
+        ):
+            time.sleep(1800)
+
+        else:
+            time.sleep(600)
+
+
+def main():
+    """
+    Start running at 9 am first day. Every 10 minutes from 9 am to 11 pm game data will be collected.
+    """
+
+    def wait_until_10_am():
+        while True:
+            # Get the current time
+            now = datetime.now()
+
+            # Check if it's 10:00 AM
+            if now.hour == 10 and now.minute == 0:
+                collect_day()
+                break  # Exit the loop and stop the script after doing something
+
+            time.sleep(30)
 
 
 if __name__ == "__main__":

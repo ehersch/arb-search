@@ -31,14 +31,15 @@ def main(filename):
 
     Returns:
         dict: A dictionary where the key is a tuple containing the matchup (team names and game time)
-              and the value is a list of tuples. Each tuple in the list contains:
+              and the value is a list of tuples. Note, we go by (away, home).
+              Each tuple in the list contains:
                 - site (str): The name of the betting site.
-                - odds (list): A list of odds for the two teams, where the first element corresponds to the first
-                  alphabetical team and the second element corresponds to the second team.
+                - odds (list): A list of odds for the two teams, where the first element corresponds to the
+                  home team and the second element corresponds to the away team.
 
     The function reads odds data from the specified JSON file, processes it to extract team names, game time,
     and odds from various sites, and organizes this information into a dictionary. The key in the dictionary is
-    a tuple of the form (team1, team2, time), and the value is a list of tuples where each tuple contains a site
+    a tuple of the form (away, home, time), and the value is a list of tuples where each tuple contains a site
     name and a list of odds.
 
     Example:
@@ -48,10 +49,6 @@ def main(filename):
     with open(filename) as f:
         data = json.load(f)
 
-    # Open and load the JSON file containing team names (for potential use)
-    with open("data/teams.json") as g:
-        teams = json.load(g)
-
     num_games = len(data["data"])
     matchups = defaultdict(list)
 
@@ -59,15 +56,25 @@ def main(filename):
     for i in range(num_games):
         team1 = data["data"][i]["teams"][0]
         team2 = data["data"][i]["teams"][1]
+        home_team = data["data"][i]["home_team"]
+        is_ordered = home_team == team1
+
         time = data["data"][i]["commence_time"]
-        key = (team1, team2, time)
+        if is_ordered:
+            key = (team1, team2, time)
+        else:
+            key = (team2, team1, time)
         lst = []
         num_sites = data["data"][i]["sites_count"]
 
         # Extract odds from each site
         for j in range(num_sites):
             site = data["data"][i]["sites"][j]["site_key"]
-            odds = data["data"][i]["sites"][j]["odds"]["h2h"]
+            odds1, odds2 = data["data"][i]["sites"][j]["odds"]["h2h"]
+            if is_ordered:
+                odds = [odds1, odds2]
+            else:
+                odds = [odds2, odds1]
             lst.append((site, odds))
 
         # Add the list of odds for the matchup to the dictionary
