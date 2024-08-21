@@ -96,12 +96,8 @@ class WebDriverManager:
         self.driver.get(url)
 
         if wait_for_class_names:
-            WebDriverWait(self.driver, timeout).until(
-                EC.any_of(
-                    EC.presence_of_element_located((By.CLASS_NAME, class_name))
-                    for class_name in wait_for_class_names
-                )
-            )
+            conditions = [EC.presence_of_element_located((By.CLASS_NAME, class_name)) for class_name in wait_for_class_names]
+            WebDriverWait(self.driver, timeout).until(EC.any_of(*conditions))
 
         return self.driver.page_source
 

@@ -1,3 +1,4 @@
+import datetime
 from bs4 import BeautifulSoup
 from webpage_loader import load_page_source
 
@@ -50,7 +51,10 @@ if __name__ == "__main__":
                 pass
 
     # Assumes we are using .com websites only. Should be refactored
-    com_index = args.url.find(".com") + 4 # len(".com") = 4
-    base_url = args.url[:com_index]
-    for hl in hyperlinks:
-        print(f"{base_url}{hl}")
+    current_date = datetime.datetime.now().strftime('%Y-%m-%d')
+    filename = f"{current_date}_game_urls.txt"
+    with open(f"./data/urls/{filename}", "w") as todays_urls_file:
+        com_index = args.url.find(".com") + 4 # len(".com") = 4
+        base_url = args.url[:com_index]
+        for hl in hyperlinks:
+            todays_urls_file.write(f"{base_url}{hl}\n")
