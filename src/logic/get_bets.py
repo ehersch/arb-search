@@ -9,7 +9,7 @@ import json
 # for games with the same matchup. Then we hold  odds_a and odds_b, where odds_a
 # is the odds we placed a bet for team1 and odds_b the same for team 2. Then
 #  amt_a and amt_b are the  bet amounts.
-def main(t1, t2, time):
+def main(away, home, time):
     # findOne to get, insertOne to add
     url = "https://us-east-2.aws.data.mongodb-api.com/app/data-jhkosvr/endpoint/data/v1/action/findOne"
 
@@ -18,7 +18,7 @@ def main(t1, t2, time):
             "collection": "previous-bets",
             "database": "arb-search",
             "dataSource": "Crud",
-            "filter": {"matchup": t1 + t2, "time": time},
+            "filter": {"matchup": away + home, "time": time},
         }
     )
     headers = {
@@ -33,10 +33,10 @@ def main(t1, t2, time):
     response = requests.request("POST", url, headers=headers, data=filt)
     data = response.json()
     print(data["document"]["odds_a"])
-    t1_odds = 0.0
-    t2_odds = 0.0
-    t1_total = 0.0
-    t2_total = 0.0
+    away_odds = 0.0
+    home_odds = 0.0
+    away_total = 0.0
+    home_total = 0.0
     for instance in data.get("document", []):
         odds_a = float(instance["data"]["odds_a"])
         odds_b = float(instance["data"]["odds_b"])
@@ -46,20 +46,20 @@ def main(t1, t2, time):
             a_sites.append(instance["data"]["site"])
         if amt_a == 0:
             b_sites.append(instance["data"]["site"])
-        t1_odds += odds_a * amt_a
-        t2_odds += odds_b * amt_b
-        t1_total += amt_a
-        t2_total += amt_b
+        away_odds += odds_a * amt_a
+        home_odds += odds_b * amt_b
+        away_total += amt_a
+        home_total += amt_b
 
     return (
         a_sites,
         b_sites,
-        t1,
-        t2,
-        float(t1_odds / float(t1_total)),
-        t1_total,
-        float(t2_odds / float(t2_total)),
-        t2_total,
+        away,
+        home,
+        float(away_odds / float(away_total)),
+        away_total,
+        float(home_odds / float(home_total)),
+        home_total,
     )
 
 

@@ -42,16 +42,16 @@ def main():
     """
     data = parse_json.main()
     print(len(data))
-    for (t1, t2, time), lst in data.items():
-        ((a, site_a), (b, site_b), (val_a, val_b)) = individual_arb({(t1, t2): lst})
+    for (away, home, time), lst in data.items():
+        ((a, site_a), (b, site_b), (val_a, val_b)) = individual_arb({(away, home): lst})
         if a + b < 1:
 
             f = {
                 "site_a": site_a,
                 "site_b": site_b,
                 "time": time,
-                "t1": t1,
-                "t2": t2,
+                "t1": away,
+                "t2": home,
                 "a": a,
                 "b": b,
                 "val_a": val_a,

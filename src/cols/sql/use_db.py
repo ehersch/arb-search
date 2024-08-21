@@ -37,7 +37,7 @@ def insert(path, team_a, team_b, win_percentage, team_a_odds, team_b_odds):
         INSERT INTO game_forecasts (team_a, team_b, win_percentage, team_a_odds, team_b_odds)
         VALUES (?, ?, ?, ?, ?)
     """,
-        (team_a, team_a, win_percentage, team_a_odds, team_b_odds),
+        (team_a, team_b, win_percentage, team_a_odds, team_b_odds),
     )
 
     conn.commit()
