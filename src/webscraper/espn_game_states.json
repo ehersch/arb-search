@@ -13,5 +13,5 @@
             "wait_class_name": "WinProbabilityGraphHeader"
         }
     ],
-    "game_time_class_name": "ScoreCell__Time"
+    "game_time_class_name": "Gamestrip__Overview"
 }

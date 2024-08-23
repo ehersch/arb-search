@@ -109,11 +109,10 @@ class WebDriverManager:
 
 
 
-def load_page_source():
+def load_page_source(wait_for_class_names):
     parser = argparse.ArgumentParser(description="A command line tool to open a web page using Selenium and BeautifulSoup.")
     parser.add_argument("--url", type=str, help="URL of the web page to open.")
     parser.add_argument("--headless", action="store_true", help="Run browser in headless mode.")
-    parser.add_argument("--wait_class_names", type=str, default=None, help="Class name of the element to wait for.")
 
     args = parser.parse_args()
 
@@ -127,12 +126,34 @@ def load_page_source():
 
     # Ensures the webpage is loaded by waiting for user specified class names to load
     manager = WebDriverManager(driver_path, driver_type, args.headless)
-    wait_for_class_names = args.wait_class_names.split(",") if args.wait_class_names else None
     page_source = manager.open_page(args.url, wait_for_class_names=wait_for_class_names)
     manager.close()
 
     return page_source, args
     
 
+def load_page_sources(wait_for_class_names):
+    parser = argparse.ArgumentParser(description="A command line tool to open a web page using Selenium and BeautifulSoup.")
+    parser.add_argument("--urls", type=str, help="URLs of the web page to open.")
+    parser.add_argument("--headless", action="store_true", help="Run browser in headless mode.")
+
+    args = parser.parse_args()
+
+    driver_path = os.getenv("WEBDRIVER")
+    driver_type = os.getenv("WEBDRIVER_TYPE")
+
+    if driver_path is None:
+        raise EnvironmentError("Error: The WEBDRIVER environment variable is not set.")
+    if driver_type is None:
+        raise EnvironmentError("Error: The WEBDRIVER_TYPE environment variable is not set.")
+
+    # Ensures the webpage is loaded by waiting for user specified class names to load
+    manager = WebDriverManager(driver_path, driver_type, args.headless)
+    page_sources = []
+    for url in args.urls.split(","):
+        page_sources.append(manager.open_page(url, wait_for_class_names=wait_for_class_names))
+    manager.close()
+
+    return page_sources, args
 if __name__ == "__main__":
     load_page_source()

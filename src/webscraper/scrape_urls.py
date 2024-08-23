@@ -13,12 +13,13 @@ if __name__ == "__main__":
     When this is executed, this script should print to the terminal all the links of games that are currently live
     or yet to be played.
     """
-    page_source, args = load_page_source()
+    wait_class_names = ["ScheduleTables"]
+    page_source, args = load_page_source(wait_class_names)
 
     # Parse the HTML content with BeautifulSoup
     soup = BeautifulSoup(page_source, "html.parser")
-    class_names = ".".join(args.wait_class_names.split())
-    target_nodes = soup.select(f".{args.wait_class_names}")
+    class_names = ".".join(wait_class_names)
+    target_nodes = soup.select(f".{class_names}")
 
     """TODO:
     Everything below this line should be in a file for scrapping scheduled games from the schedule page. Then we can
@@ -53,8 +54,12 @@ if __name__ == "__main__":
     # Assumes we are using .com websites only. Should be refactored
     current_date = datetime.datetime.now().strftime('%Y-%m-%d')
     filename = f"{current_date}_game_urls.txt"
-    with open(f"./data/urls/{filename}", "w") as todays_urls_file:
-        com_index = args.url.find(".com") + 4 # len(".com") = 4
-        base_url = args.url[:com_index]
-        for hl in hyperlinks:
-            todays_urls_file.write(f"{base_url}{hl}\n")
+    # with open(f"./data/urls/{filename}", "w") as todays_urls_file:
+    #     com_index = args.url.find(".com") + 4 # len(".com") = 4
+    #     base_url = args.url[:com_index]
+    #     for hl in hyperlinks:
+    #         todays_urls_file.write(f"{base_url}{hl}\n")
+    com_index = args.url.find(".com") + 4 # len(".com") = 4
+    base_url = args.url[:com_index]
+    for hl in hyperlinks:
+        print(f"{base_url}{hl}")

@@ -1,7 +1,7 @@
 import json
 from abc import ABC, abstractmethod
 from bs4 import BeautifulSoup
-from webpage_loader import load_page_source
+from webpage_loader import load_page_source, load_page_sources
 
 
 CONDITIONS_FILENAME = "espn_game_states.json"
@@ -83,10 +83,13 @@ class GameAnalyser(ABC):
     #     return team_names
     
     def get_team_names(self, retry=1):
-        team_names_class = "ScoreCell__TeamName"
+        # Sometimes this returns an empty string. Either the page hasn't fully loaded
+        # or I'm coding something wrong
+        team_names_class = "Gamestrip__Competitors"
         
         for _ in range(retry):
-            team_names = self.soup.select(f".{team_names_class}")
+            team_names = self.soup.select(f".{team_names_class}")[0]
+            team_names = team_names.select(".ScoreCell__TeamName")
             
             if len(team_names) < 2:
                 continue  # In case the expected elements aren't found, retry
@@ -199,8 +202,9 @@ class PendingGameAnalyser(GameAnalyser):
 
         # Time is in the div with this class name
         time_div_classname = "Gamestrip__Time--wrapper"
+        # time_div_classname = "Gamestrip__Overview"
         game_time_div = self.soup.select(f".{time_div_classname}")[0]
-        game_time = game_time_div.text    
+        game_time = game_time_div.text
 
         matchup_payload = self.create_payload(
             MLB_TEAM_NAMES_MAP[team_names[0]],
@@ -248,13 +252,15 @@ analyser_factory = {
 
 
 if __name__ == "__main__":
-    page_source, args = load_page_source()
     condition_mapping = load_conditions(CONDITIONS_FILENAME)
-
+    wait_for_class_names = [d["wait_class_name"] for d in condition_mapping["mlb_game_conditions"]]
+    page_sources, args = load_page_sources(wait_for_class_names)
+    
     # Parse the HTML content with BeautifulSoup
-    soup = BeautifulSoup(page_source, "html.parser")
-    page_state = identify_page_state(condition_mapping, soup)
+    for page_source in page_sources:
+        soup = BeautifulSoup(page_source, "html.parser")
+        page_state = identify_page_state(condition_mapping, soup)
 
-    analyser = analyser_factory[page_state](soup, args, condition_mapping)
-    print(analyser.process())
+        analyser = analyser_factory[page_state](soup, args, condition_mapping)
+        print(analyser.process())
     
