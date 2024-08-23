@@ -1,5 +1,7 @@
 import argparse
 import os
+import concurrent.futures
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.firefox.service import Service as FirefoxService
@@ -108,6 +110,10 @@ class WebDriverManager:
         self.driver.quit()
 
 
+def load_page(url, manager, wait_for_class_names):
+    """Function to load a page using the manager."""
+    return manager.open_page(url, wait_for_class_names=wait_for_class_names)
+
 
 def load_page_source(wait_for_class_names):
     parser = argparse.ArgumentParser(description="A command line tool to open a web page using Selenium and BeautifulSoup.")
@@ -150,8 +156,10 @@ def load_page_sources(wait_for_class_names):
     # Ensures the webpage is loaded by waiting for user specified class names to load
     manager = WebDriverManager(driver_path, driver_type, args.headless)
     page_sources = []
+
     for url in args.urls.split(","):
         page_sources.append(manager.open_page(url, wait_for_class_names=wait_for_class_names))
+    
     manager.close()
 
     return page_sources, args
