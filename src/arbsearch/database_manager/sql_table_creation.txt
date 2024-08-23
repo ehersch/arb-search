@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS game_forecasts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    away_team TEXT NOT NULL,
+    home_team TEXT NOT NULL,
+    win_percentage REAL NOT NULL,
+    away_team_odds REAL NOT NULL,
+    home_team_odds REAL NOT NULL
+)
