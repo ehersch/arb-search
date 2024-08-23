@@ -1,5 +1,6 @@
 import ast
 import subprocess as sp
+from arbsearch.webscraper.webpage_loader import load_page_source
 
 
 GET_URLS_SCRIPT_RELATIVE_PATH = "./scrape_urls.py"

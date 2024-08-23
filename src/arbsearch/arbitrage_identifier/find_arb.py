@@ -23,7 +23,7 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from cols import parse_json
+from odds_collector import parse_json
 
 data = parse_json.main()
 
