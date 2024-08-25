@@ -10,3 +10,6 @@ Here are the skills I refined:
 - Forecasting techniques. Forecasting sounds scary and seems complicated. The math seems difficult, but once you find its derivations from standard regression tactics, it's not too bad. I learned about Arima and Prophet models, and most importantly, that data science requires experimenting with various models to see what truly sticks. On top of this, being organized with data, design, and visualizations can make it far easier to replicate such processes down the line, when training on new data sets.
 
 Overall skills: data science (forecasting), sklearn, SQL.
+
+## To Do
+- [ ] Move schemas and interfaces to a dedicated location
