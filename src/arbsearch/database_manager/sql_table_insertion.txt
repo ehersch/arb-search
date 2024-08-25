@@ -1,0 +1,7 @@
+INSERT INTO game_forecasts (
+    away_team, 
+    home_team, 
+    home_team_win_probability, 
+    away_team_odds, 
+    home_team_odds
+) VALUES (?, ?, ?, ?, ?)

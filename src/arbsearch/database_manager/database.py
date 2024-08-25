@@ -1,11 +1,12 @@
-import use_db
 from abc import ABC, abstractmethod
 import sqlite3
 import csv
 
 from pydantic import BaseModel
 
+
 PATH_TO_CREATION_LOGIC = "./sql_table_creation.txt"
+PATH_TO_INSERTION_LOGIC = "./sql_table_insertion.txt"
 MATCHUP_PREDICTIONS_DATABASE = "./matchup_predictions.db"
 
 
@@ -29,6 +30,7 @@ class DatabaseInterface(ABC):
 class SQLDatabase(DatabaseInterface):
     def __init__(self, path):
         super().__init__(path)
+        self.create()
 
     def create(self):
         con = sqlite3.connect(self.path)
@@ -49,24 +51,16 @@ class SQLDatabase(DatabaseInterface):
         cur = con.cursor()
 
         # SQL insert statement
-        sql_insert = """
-        INSERT INTO game_forecasts (
-            away_team, 
-            home_team, 
-            home_team_win_probability, 
-            away_team_odds, 
-            home_team_odds
-        ) VALUES (?, ?, ?, ?, ?)
-        """
-
-        # Execute the insert statement with data from MatchupSchema
-        cur.execute(sql_insert, (
-            data.away_team,
-            data.home_team,
-            data.home_team_win_probability,
-            data.away_team_odds,
-            data.home_team_odds
-        ))
+        with open(PATH_TO_INSERTION_LOGIC, "r") as sql_insert:
+            sql_command = sql_insert.read()
+            # Execute the insert statement with data from MatchupSchema
+            cur.execute(sql_command, (
+                data.away_team,
+                data.home_team,
+                data.home_team_win_probability,
+                data.away_team_odds,
+                data.home_team_odds
+            ))
 
         # Commit the changes and close the connection
         con.commit()
