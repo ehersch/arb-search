@@ -148,7 +148,3 @@ class OddsAPICollection(OddsCollectionInterface):
          self.write_to(file_to_write_to)
          odds_dict = self.parse_json(file_to_write_to)
          return odds_dict
-
-if __name__ == "__main__":
-    file_created = "/Users/ethanhersch/independent-code/arb-search/data/odds1.json"
-    OddsAPICollection().parse_json(file_created)
