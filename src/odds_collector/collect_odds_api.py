@@ -3,7 +3,6 @@ from abc import ABC, abstractmethod
 from pydantic import BaseModel
 import json
 import requests
-from asyncio import gather
 from collections import defaultdict
 
 
@@ -12,8 +11,10 @@ class MatchupKeySchema(BaseModel):
     home_team: str
     game_time: int
 
+
 class BooksSchema(BaseModel):
-    books_list_element: tuple[str, list[float, float]]
+    books_list_element: tuple[str, list[float]]
+
 
 def hashable(schema: MatchupKeySchema):
     """
@@ -21,9 +22,18 @@ def hashable(schema: MatchupKeySchema):
     """
     return (schema.away_team, schema.home_team, schema.game_time)
 
+
 class OddsCollectionInterface(ABC):
     def __init__(self):
         return
+
+    # @abstractmethod
+    # def fetch_data(self, write_to_path):
+    #     pass
+
+    # @abstractmethod
+    # def process_data(self):
+    #     pass
 
     @abstractmethod
     def retrieve_data(self):
@@ -33,6 +43,7 @@ class OddsCollectionInterface(ABC):
 class OddsAPICollection(OddsCollectionInterface):
     def __init__(self):
         super().__init__()
+
     def write_to(self, filename):
       """
       Fetches baseball odds data from the Odds API and saves it to a JSON file.
