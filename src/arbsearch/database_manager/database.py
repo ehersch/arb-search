@@ -1,13 +1,17 @@
-from abc import ABC, abstractmethod
 import sqlite3
-import csv
 
+from abc import ABC, abstractmethod
+from pathlib import Path
 from pydantic import BaseModel
 
 
-PATH_TO_CREATION_LOGIC = "./sql_table_creation.txt"
-PATH_TO_INSERTION_LOGIC = "./sql_table_insertion.txt"
-MATCHUP_PREDICTIONS_DATABASE = "./matchup_predictions.db"
+# Get the directory of the current file
+current_dir = Path(__file__).parent
+
+# Construct the absolute paths
+PATH_TO_CREATION_LOGIC = current_dir / "sql_table_creation.txt"
+PATH_TO_INSERTION_LOGIC = current_dir / "sql_table_insertion.txt"
+MATCHUP_PREDICTIONS_DATABASE = current_dir / "matchup_predictions.db"
 
 
 class MatchupSchema(BaseModel):
@@ -21,6 +25,10 @@ class MatchupSchema(BaseModel):
 class DatabaseInterface(ABC):
     def __init__(self, path):
         self.path = path
+
+    @abstractmethod
+    def create(self):
+        pass
 
     @abstractmethod
     def insert_data(self, data: MatchupSchema):
